@@ -12,6 +12,7 @@ namespace EntityFrameworkTwo
 		{
 			AddCategory(new Category(2, "Холодильники"));
 			GetAllCategory();
+			MyTransaction();
 
 			Console.ReadLine();
 		}
@@ -36,6 +37,28 @@ namespace EntityFrameworkTwo
 				foreach (Category item in list)
 				{ 
 					Console.WriteLine(item);
+				}
+			}
+		}
+		static void MyTransaction()
+		{
+			using (StoreEntities storeEntities = new StoreEntities())
+			{
+				using (System.Data.Entity.DbContextTransaction tran = storeEntities.Database.BeginTransaction())
+				{
+					try
+					{
+						Category cat = new Category(2, "холодильник");
+						storeEntities.Category.Add(cat);
+						storeEntities.Category.Remove(cat);
+						storeEntities.SaveChanges();
+						tran.Commit();
+
+					}
+					catch (Exception ex)
+					{
+						tran.Rollback();
+					}
 				}
 			}
 		}
