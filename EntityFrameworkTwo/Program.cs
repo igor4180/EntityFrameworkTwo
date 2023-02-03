@@ -10,7 +10,7 @@ namespace EntityFrameworkTwo
 	{
 		static void Main(string[] args)
 		{
-			//AddCategory(new Category(2, "Холодильники"));
+			AddCategory(new Category(2, "Холодильники"));
 			GetAllCategory();
 
 			Console.ReadLine();
@@ -20,8 +20,12 @@ namespace EntityFrameworkTwo
 		{
 			using (StoreEntities storeEntities = new StoreEntities())
 			{
-				storeEntities.Category.Add(item);
-				storeEntities.SaveChanges();
+				Category exist = storeEntities.Category.Where((x) => x.Id == item.Id && x.Name == item.Name).FirstOrDefault();
+				if (exist == null)
+				{
+					storeEntities.Category.Add(item);
+					storeEntities.SaveChanges();
+				}
 			}
 		}
 		static void GetAllCategory()
